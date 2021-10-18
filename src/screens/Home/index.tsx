@@ -13,6 +13,8 @@ import {
   TotalPassCount,
   LoginList,
 } from './styles';
+import { ActivityIndicator } from 'react-native';
+import { nullableTypeAnnotation } from '@babel/types';
 
 interface LoginDataProps {
   id: string;
@@ -30,15 +32,40 @@ export function Home() {
 
   async function loadData() {
     const dataKey = '@savepass:logins';
-    // Get asyncStorage data, use setSearchListData and setData
+    const data = await AsyncStorage.getItem(dataKey);
+    const registers = data ? JSON.parse(data) : []
+
+    const registerFormated: LoginDataProps[] = registers
+      .map((item: LoginDataProps) => {
+        return {
+          id: item.id,
+          service_name: item.service_name,
+          email: item.email,
+          password: item.password
+        }
+      })
+      setSearchListData(registerFormated);
+      setData(registerFormated);
   }
 
   function handleFilterLoginData() {
-    // Filter results inside data, save with setSearchListData
+    if(searchText.trim() === ''){
+      setSearchListData(data);
+    } else {
+      const filteredData = searchListData
+      .filter((item: LoginDataProps) => {
+        return item.service_name.toLowerCase().indexOf(searchText.toLowerCase()) > -1 ;
+      })
+      setSearchListData(filteredData);
+    }
   }
 
   function handleChangeInputText(text: string) {
-    // Update searchText value
+    if(text.length != 0 || text != ''){
+      setSearchText(text);
+    } else {
+      setSearchListData(data);
+    }
   }
 
   useFocusEffect(useCallback(() => {
@@ -49,8 +76,8 @@ export function Home() {
     <>
       <Header
         user={{
-          name: 'Rocketseat',
-          avatar_url: 'https://i.ibb.co/ZmFHZDM/rocketseat.jpg'
+          name: 'Yanderson',
+          avatar_url: 'https://avatars.githubusercontent.com/yansena'
         }}
       />
       <Container>
