@@ -49,22 +49,18 @@ export function Home() {
   }
 
   function handleFilterLoginData() {
-    if(searchText.trim() === ''){
-      setSearchListData(data);
-    } else {
-      const filteredData = searchListData
-      .filter((item: LoginDataProps) => {
-        return item.service_name.toLowerCase().indexOf(searchText.toLowerCase()) > -1 ;
-      })
-      setSearchListData(filteredData);
-    }
+    const filteredData = searchListData
+    .filter((item: LoginDataProps) => {
+      return item.service_name.toLowerCase().indexOf(searchText.toLowerCase()) > -1 ;
+    })
+    setSearchListData(filteredData);
   }
 
   function handleChangeInputText(text: string) {
-    if(text.length != 0 || text != ''){
-      setSearchText(text);
+    if(!text){
+      setSearchListData(data)
     } else {
-      setSearchListData(data);
+      setSearchText(text);
     }
   }
 
